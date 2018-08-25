@@ -1,0 +1,169 @@
+
+C1W2L02
+-------
+House price prediction linear function is a neural network with one neuron:
+
+a)
+           X  -
+             -
+           X-  X
+         X -            -------> this is RELU function
+          -  X
+----------
+
+b)
+----------
+size     |-
+         | -
+         |  ->O -
+         | -     -
+#bedrooms|-       ->O -
+         | -    -       - - ->-------
+         |  ->O --->O - - - ->|price|
+         | -    -       - - ->-------
+zip code |-      -->O -          |
+         | -    -                V
+         |  ->O                  y
+         | -
+wealth   |-
+---------
+    | 
+    V
+    x
+
+C1W2L03
+-------
+Supervised learning
+ffn , cnn, rnn
+
+Structured data vs unstructured data
+
+C1W1L04
+-------
+
+Train bigger network + add more labelled data to obtain better results
+
+For smaller sets we cannot see which algorithm performs best
+
+Switching from sigmoid to relu (in sigmoid function gradients at end intervals are 0, so the training is very slow comparative to relu)
+
+
+C1W2L01
+-------
+
+Logistic Regression = function used for Binary Classification
+
+
+RGB matrix representation of image
+
+RED 64X64
+--             -- 
+|255  231  41  22|
+|232 321 321   33|
+|323 323 312   32|
+| 3  321  321   2|
+|3213 3  321    3|
+|32 3213  312 321|
+|32  321  331 321|
+--             --                      -   -
+GREEN  64X64                           |255| 
+--             --                      |231|
+|155  31  141  122|                    | : |
+|232 321 321   33|                     | : |
+|323 323 312   32|                     |155|
+| 3  321  321   2|                     |31 |
+|3213 3  321    3|    ============> x =| : |
+|32 3213  312 321|                     | : |
+|32  321  331 321|                     |255|
+--             --                      |231|
+BLUE   64X64                           | : |
+--             --                      | : |
+|255  231  41  22|                     -   -
+|232 321 321   33|                  x= 64X64X3
+|323 323 312   32|
+| 3  321  321   2|
+|3213 3  321    3|
+|32 3213  312 321|
+|32  321  331 321|
+--             --
+
+
+(x, y) x = R^3, y = {0,1}
+
+
+
+n training examples: {(x^1, y^1), (x^2, y^2), ....}
+
+    [             ]
+    [ |  |       |]
+    [ |  |       |]
+X = [x^1 x^2...x^n]     Y = [y^1 y^2 ... y^2]
+    [ |  |       |]     Y shape = (1, n)
+    [ |  |       |]
+    [             ]
+
+X = R^n*m
+X shape = (n, m)
+
+
+C1W2L02
+-------
+              ^
+Given x, want y = P(y=1|x)
+
+x = R^n
+
+Parameter: w = R^n, b=R
+        ^
+Output: y =sigm(wTx + b)  where   sigm(z) = 1/(1+e^(-z))
+
+
+C1W2L03
+-------
+
+z^i = wTx^i + b
+            ^        ^
+Loss : L(y, y) = 1/2(y-y)^2    this loss function is not convex
+            ^           ^               ^
+       L(y, y) = -(y*logy + (1-y)*log(1-y))
+
+
+If y = 1 :             ^                   ^                 ^
+       L(y, y) = -logy   <------ want logy to be large, want y to be large
+
+If y = 0 :              ^                       ^
+     ^  L(y, y) = -log(1-y)   <------ want log(1-y) to be large, want y to be small
+
+                                   ^                     ^               ^
+Cost function: J(w, b) = 1/m*SUM L(y, y) = -1/m*SUM[y*logy + (1-y)*log(1-y))]
+
+C1W2L03
+-------
+
+Find w,b that minimize J(w, b)
+
+
+Convex vs non convex functions
+
+Repeat { w := w - a*dJ(w,b)/dw 
+         b := b - a*dJ(w,b)/db }  a = learning rate
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
