@@ -224,3 +224,125 @@ dL/db = dz = a - y
 w1 := w1 - alpha * dL/dw1
 w2 := w2 - alpha * dL/dw2
 b := b - alpha * dL/db
+
+C1W2L10
+-------
+
+Logistic regression over m examples
+J(w,b) = 1/n SUM L(ai,y)
+ai = y'i = sig(w^T*xi + b)
+
+d/dw1 J(w,b) = 1/n SUM d/dwi L(ai, yi)
+
+J = 0, dw1=0, dw2=0, db=0
+#first for loop
+for i=1 to n
+    zi = w^T * xi + b
+    ai = sig(zi)
+    Jt = -[yi log ai + (1-yi) log (1-ai)]
+    #second for loop because we have n wi variables
+    dzi = ai-yi
+    dw1 += x1i dzi
+    dw2 += x2i dzi
+    db += dzi
+J /= n
+dw1 /= n
+dw2 /= n
+db /= n
+
+dw1 = dJ/dw1
+
+w1 := w1 - alpha*dw1
+w2 := w2 - alpha*dw2
+b := b - alpha*db
+
+Problem is that we need 2 for loops -> need vectorization
+
+C1W2L11
+-------
+
+z = w^T * x + b   w=[column vector] x = [column vector]
+
+Non vectorize
+z = 0
+for i in range(n-x):
+    z += w[i]*x[i]
+z+= b
+
+Vectorized
+z = np.dot(w, x) + b
+
+GPU, CPU -> SIMD instructions
+
+C1W2L12
+-------
+
+u = A*v
+ui = SUM Aij * vj
+u = np.zeros()
+for i...
+    for j...
+    	u[i] += A[i][j] * v[i]
+
+vs 
+
+u = np.dot(A,v)
+
+
+v = [v1, v2,...]   u = [e^v1, e^v2,....]
+
+u = np.zeros((n,1))
+for i in range(n):
+    u[i] = math.exp(v[i])
+
+vs 
+
+u = np.exp(v)
+
+In logistic regression from C1W2L10 we will replace dw1=0, dw2=0,... with dw = np.zeros() vector and for dw1 += x1i dzi, dw2 += x2i dzi replace with one dw += xi * dzi vector
+
+C1W2L13
+-------
+
+Z = [z1, z2, ...] = w^T * X + [b, b, ...] = [w^T * x1, w^T * x2, ...]
+
+Z = np.dot(w^T, X) + b
+
+C1W2L14
+-------
+
+Vectorize logistic regression
+
+dz1 = a1 - y1 
+dz2 = a2 - y2
+...
+
+
+dZ = [dz1, dz2, ...]
+
+A = [a1, a2, ...]
+Y = [y1, y2, ...]
+dZ = A - Y
+
+dW = 0          db = 0
+dw += x1dz1     db += dz1
+dw += x2dz2     db += dz2
+
+dw /= n         db /= 2
+
+
+Vectorize 
+
+db = 1/n * SUM dzi = 1/n np.sum(dz)
+dw = 1/n * X * dZ^T
+
+
+for iteration in range(1000)
+#gradient descent
+Z = w^TX+b = np.sot(w^T,X)
+A = sig(Z)
+dZ = A-Y
+dw = 1/nXdZ^T
+db = 1/np.sum(dZ)
+w := w-alpha*dw
+b := b-alpha*db
