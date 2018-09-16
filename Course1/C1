@@ -137,7 +137,7 @@ If y = 0 :              ^                       ^
                                    ^                     ^               ^
 Cost function: J(w, b) = 1/m*SUM L(y, y) = -1/m*SUM[y*logy + (1-y)*log(1-y))]
 
-C1W2L03
+C1W2L04
 -------
 
 Find w,b that minimize J(w, b)
@@ -148,22 +148,79 @@ Convex vs non convex functions
 Repeat { w := w - a*dJ(w,b)/dw 
          b := b - a*dJ(w,b)/db }  a = learning rate
 
+C1W2L05
+-------
+
+Derivatives: very intuitive explanation from Andrew Ng :D
+
+f(a) = 3*a -> f'(a) = 3
+
+C1W2L06 + C1W2L07
+-----------------
+
+f(a) = a^2 -> f'(a) = 2*a
+
+C1W2L08
+-------
+
+Probably the most interesting for deeply understand backpropagation
+
+Computation Graphs
+
+J = 3 * v
+v = a + u
+u = b * c
+a = 5
+b = 3
+c = 2
+
+dJ/dv = 3
+v = 11 -> v = 11.001
+J = 33 -> J = 33.003
+
+? dJ/da = ?
+R :
+a = 5 -> a = 5.001
+v = 11 -> v = 11.001
+J = 33 -> J = 33.003
+dJ/da = dJ/dv * dv/da |-> dJ/da = dJ/dv*dv/da = 3 * 1 = 3
+dv/da = 1             |
+
+dFinalOutputVariable/dvar = dJ/dvar
 
 
+dJ/da = 3 * 1 = dJ/dv * dv/du
 
 
+dJ/db = dJ/du * du/db =  3 * 2 = 6			b = 3 -> 3.001
+					   	     				u = b * c = 6 -> 6.002
+					   	     				J = 33.006
+
+dJ/dc = dJ/du * du/dc = 3 * 3 = 9
+
+C1W2L09
+-------
+
+Logistic regression recap
+z = w^T * x + b
+y' = a = sig(z)
+L(a, y) = - (ylog(a) + (1-y)log(1-a))
+
+x1
+w1
+x2     z = w1 * x1 + x2 * x2 + b y' = a = sig(z) -> L(a,y)
+w2
+b
 
 
+dL(a,y)/da = -y/a + (1-y)/(1-a)
 
+dL(a,y)/dz = dL/da * da/dz = a * (1-a) *(-y/a + (1-y)/(1-a)) = a - y
 
+dL/dw1 = x1 * dL(a,y)/dz = x1 * (a-y)
+dL/dw2 = x2 * dL(a,y)/dz = x2 * (a-y)
+dL/db = dz = a - y
 
-
-
-
-
-
-
-
-
-
-
+w1 := w1 - alpha * dL/dw1
+w2 := w2 - alpha * dL/dw2
+b := b - alpha * dL/db
